@@ -1,0 +1,25 @@
+Traceback (most recent call last):
+  File "bot.py", line 19, in <module>
+    from pyqiwip2p.AioQiwip2p import AioQiwiP2P
+ModuleNotFoundError: No module named 'pyqiwip2p'
+Task exception was never retrieved
+future: <Task finished name='Task-46' coro=<Dispatcher._process_polling_updates() done, defined at /home/ubuntu/telegram_bot/venv/lib/python3.8/site-packages/aiogram/dispatcher/dispatcher.py:409> exception=TypeError("'NoneType' object is not subscriptable")>
+Traceback (most recent call last):
+  File "/home/ubuntu/telegram_bot/venv/lib/python3.8/site-packages/aiogram/dispatcher/dispatcher.py", line 417, in _process_polling_updates
+    for responses in itertools.chain.from_iterable(await self.process_updates(updates, fast)):
+  File "/home/ubuntu/telegram_bot/venv/lib/python3.8/site-packages/aiogram/dispatcher/dispatcher.py", line 238, in process_updates
+    return await asyncio.gather(*tasks)
+  File "/home/ubuntu/telegram_bot/venv/lib/python3.8/site-packages/aiogram/dispatcher/handler.py", line 116, in notify
+    response = await handler_obj.handler(*args, **partial_data)
+  File "/home/ubuntu/telegram_bot/venv/lib/python3.8/site-packages/aiogram/dispatcher/dispatcher.py", line 286, in process_update
+    return await self.callback_query_handlers.notify(update.callback_query)
+  File "/home/ubuntu/telegram_bot/venv/lib/python3.8/site-packages/aiogram/dispatcher/handler.py", line 116, in notify
+    response = await handler_obj.handler(*args, **partial_data)
+  File "bot.py", line 68, in wrapper
+    return await func(callback_query)
+  File "bot.py", line 356, in send_payment
+    subscription_price = get_subscription_price(subscription_id)
+  File "/home/ubuntu/telegram_bot/service.py", line 103, in get_subscription_price
+    return result[0]
+TypeError: 'NoneType' object is not subscriptable
+Goodbye!
