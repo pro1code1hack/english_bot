@@ -58,7 +58,7 @@ def get_question_info(question_id: int):
 
 
 def save_user_result(user_id: int, quiz_id: int, result: int = 0) -> None:
-    insert('user_result', {'score': result, 'quiz_id': quiz_id, 'user_id': user_id})
+    insert('user_result', {'score': result, 'quiz_id': quiz_id, 'user_id': user_id})        # + nickname
 
 
 def get_user_subscriptions(user_id: int) -> List:

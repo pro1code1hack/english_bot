@@ -36,7 +36,7 @@ A1_inlineKeyboard13= InlineKeyboardButton('Future Simple', callback_data='Test 5
 A1_inlineKeyboard14= InlineKeyboardButton('Modal Verbs', callback_data='Test 58')
 A1_inlineKeyboard16= InlineKeyboardButton('Adverbs of Frequency', callback_data='Test 59')
 A1_inlineKeyboard17= InlineKeyboardButton('Adverbs of manner', callback_data='Test 60')
-A1_get_konspekt = InlineKeyboardButton('Получить конспект' , callback_data='GetA1')
+A1_get_konspekt = InlineKeyboardButton('Получить конспект' , callback_data='Get A1')
 
 """
 A1_inlineKeyboard11, 
@@ -132,7 +132,7 @@ A2_inlineKeyboard13= InlineKeyboardButton('Modal verbs ', callback_data='Test 34
 A2_inlineKeyboard14= InlineKeyboardButton('Future Simple', callback_data='Test 35')
 A2_inlineKeyboard15= InlineKeyboardButton('Prepositions', callback_data='Test 36')
 A2_inlineKeyboard16= InlineKeyboardButton('Quantifiers ', callback_data='Test 37')
-A2_get_konspekt = InlineKeyboardButton('Получить конспект' , callback_data='GetA2')
+A2_get_konspekt = InlineKeyboardButton('Получить конспект' , callback_data='Get A2')
 
 #####################################################################################################
 A2_GrammarFull=InlineKeyboardMarkup(row_width=2).add(A2_inlineKeyboard1,A2_inlineKeyboard2,A2_inlineKeyboard3
@@ -223,7 +223,7 @@ B1_inlineKeyboard20=InlineKeyboardButton('Conditionals', callback_data='Test 20'
 B1_inlineKeyboard21=InlineKeyboardButton('Quantifiers', callback_data='Test 21')
 B1_inlineKeyboard22=InlineKeyboardButton('Indirect speech', callback_data='Test 17')
 
-B1_get_konspekt = InlineKeyboardButton("Получить конспект", callback_data ='GetB1')
+B1_get_konspekt = InlineKeyboardButton("Получить конспект", callback_data ='Get B1')
 
 
 ###Check B1!!!!!!!!!!###########
@@ -321,7 +321,7 @@ B2_inlineKeyboard22=InlineKeyboardButton(r"Gerund and Infinitive", callback_data
 B2_inlineKeyboard23=InlineKeyboardButton(r"All Passive Voice forms", callback_data='Test 84')
 B2_inlineKeyboard24=InlineKeyboardButton(r"Linking Words", callback_data='Test 85')
 B2_inlineKeyboard25=InlineKeyboardButton(r"Expression of the Future", callback_data='Test 86')
-B2_get_konspekt = InlineKeyboardButton("Получить конспект", callback_data ='GetB2')
+B2_get_konspekt = InlineKeyboardButton("Получить конспект", callback_data ='Get B2')
 
 B2_GrammarFull=InlineKeyboardMarkup(row_width=2).add(B2_inlineKeyboard1,B2_inlineKeyboard2,B2_inlineKeyboard3,B2_inlineKeyboard4,
 B2_inlineKeyboard5,B2_inlineKeyboard6,B2_inlineKeyboard7,B2_inlineKeyboard8,B2_inlineKeyboard9,B2_inlineKeyboard10,B2_inlineKeyboard11,
@@ -472,8 +472,8 @@ a1_paymentButton = InlineKeyboardButton('A1', callback_data='pay/1')
 a2_paymentButton = InlineKeyboardButton('A2', callback_data='pay/2')
 b1_paymentButton = InlineKeyboardButton('B1', callback_data='pay/3')
 b2_paymentButton = InlineKeyboardButton('B2', callback_data='pay/4')
-full_course_paymentButton = InlineKeyboardButton('Весь курс', callback_data='pay/5')
+#full_course_paymentButton = InlineKeyboardButton('Весь курс', callback_data='pay/5')
 
 
 payment_keyboard= InlineKeyboardMarkup(resize_keyboard=True).add(a1_paymentButton,
-                        a2_paymentButton, b1_paymentButton,b2_paymentButton, full_course_paymentButton)
+                        a2_paymentButton, b1_paymentButton,b2_paymentButton)        # check_subscriptions

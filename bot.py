@@ -154,7 +154,6 @@ async def process_callback_kb1btn1(callback_query: types.CallbackQuery, state: F
     options = [option['text'] for option in question['options']]
     keyboard = generate_inline_keyboard(options)
     await bot.send_message(callback_query.from_user.id, question['task_text'], reply_markup=keyboard)
-
     await Test.InProgress.set()
 
 
@@ -171,7 +170,10 @@ async def process_callback_kb1btn1(callback_query: types.CallbackQuery, state: F
         async with state.proxy() as data:
             data['score'] += question['weight']
     else:
-        await bot.send_message(callback_query.from_user.id, f'Неправильно❌\nПравильный ответ: {correct_answer}')
+        await bot.send_message(callback_query.from_user.id, f'Неправильно❌\nПравильный ответ: *{correct_answer}*' + '\n'
+                               + '---------------------------------------------------------------' + '\n'
+                                                                                                     'Чтобы отменить тест нажмите /cancel',
+                               parse_mode='Markdown')
     if left_questions:
         async with state.proxy() as data:
             question = data['questions'].pop(0)
@@ -184,7 +186,7 @@ async def process_callback_kb1btn1(callback_query: types.CallbackQuery, state: F
             score = data['score']
             quiz_id = data['quiz_id']
         save_user_result(callback_query.from_user.id, quiz_id, score)
-        await bot.send_message(callback_query.from_user.id, f'Тест завершено. У вас {score} балов из 20')
+        await bot.send_message(callback_query.from_user.id, f'Тест завершено. У вас {score} балов из {20}')
         await state.finish()
 
 
@@ -201,7 +203,10 @@ async def process_callback_kb1btn1(callback_query: types.CallbackQuery, state: F
         async with state.proxy() as data:
             data['score'] += question['weight']
     else:
-        await bot.send_message(callback_query.from_user.id, f'Неправильно❌\nПравильный ответ: *{correct_answer}*', parse_mode='Markdown')
+        await bot.send_message(callback_query.from_user.id, f'Неправильно❌\nПравильный ответ: *{correct_answer}*'+'\n'
+                               +'---------------------------------------------------------------'+'\n'
+                               'Чтобы отменить тест нажмите /cancel', parse_mode='Markdown')
+       # await bot.send_message(callback_query.from_user.id, )
     if left_questions:
         async with state.proxy() as data:
             question = data['questions'].pop(0)
@@ -263,7 +268,7 @@ levels = ('Beginner(A1)👶', 'Pre-Intermediate(A2)🧒', 'Intermediate(B1)🧑�
 
 
 @dp.message_handler(lambda message: message.text and message.text in levels)
-#@check_subscriptions
+@check_subscriptions
 async def learning_programs(message: types.Message):
     if message.text == 'Beginner(A1)👶':
         await message.answer("Программа работы:", reply_markup=con.MenuA1)
@@ -286,13 +291,15 @@ async def process_start_command(message: types.Message):
     elif message.text == 'Main Menu🏠':
         await message.answer("Выберите опцию: ", reply_markup=con.Main_menu)
     elif message.text == 'Информация о курсеℹ':
-        await message.answer("Отправляю файл:", reply_markup=con.Main_menu)
-        await bot.send_document(message.chat.id, ('A1_all.pdf', A1))
+        await message.answer("Отправляю файл, ожидайте⏳:", reply_markup=con.Main_menu)
+        doc = open('staticfiles/Course.pdf', 'rb')
+        await bot.send_document(message.chat.id, ('Информация.pdf', doc))
+        doc.close()
     elif message.text == 'Оплатить обучение💵':
-        await message.answer('Чтобы получить доступ к материалам, преобретите подписку, пожалуйста!', reply_markup=con.payment_keyboard)
+        await message.answer('Чтобы получить доступ к материалам, преобретите подписку, пожалуйста!'
+                             '\nЕсли вас интересует покупка всего курса, напишите нашему преподователю @eng_trainee', reply_markup=con.payment_keyboard)
     elif message.text == 'Назад':
         await message.answer("Выберите опцию: ", reply_markup=con.lvl_menu)
-
     elif message.text == 'Test (id)':  # Блядь. Мають бути тестові кнопки, на каждій кнопкі команда /test 1 або /test 2 або /test 3
         await message.reply("Tests", reply_markup=con.Test_menu)
         print(con.Test_menu)
@@ -303,7 +310,10 @@ async def process_start_command(message: types.Message):
     if message.text == 'Listening(B2)':
         await message.reply("Программа работы Listening(B2):", reply_markup=con.B2_ListeningFull)
     if message.text == 'Vocabulary(B2)':
-        await bot.send_document(message.chat.id, ('A1_all.pdf', A1))
+        doc = open('staticfiles/vocabulary/B2_Vocabulary.pdf', 'rb')
+        await bot.send_message(message.chat.id,"Отправляю документ, ожидайте⏳")
+        await bot.send_document(message.chat.id, ('B2_Vocabulary.pdf', doc))
+        doc.close()
     if message.text == 'Grammar(B1)':
         await message.reply("Программа работы Grammar(B1):", reply_markup=con.B1_GrammarFull)
     if message.text == 'Reading(B1)':
@@ -312,7 +322,10 @@ async def process_start_command(message: types.Message):
     if message.text == 'Listening(B1)':
         await message.answer("Программа работы Listening(B1):", reply_markup=con.B1_ListeningFull)
     if message.text == 'Vocabulary(B1)':
-        await bot.send_document(message.chat.id, ('A1_all.pdf', A1))
+        doc = open('staticfiles/vocabulary/B1_Vocabulary.pdf', 'rb')
+        await bot.send_message(message.chat.id,"Отправляю документ, ожидайте⏳")
+        await bot.send_document(message.chat.id, ('B1_Vocabulary.pdf', doc))
+        doc.close()
     if message.text == 'Grammar(A2)':
         await message.reply("Программа работы Grammar(A2):", reply_markup=con.A2_GrammarFull)
     if message.text == 'Reading(A2)':
@@ -320,7 +333,10 @@ async def process_start_command(message: types.Message):
     if message.text == 'Listening(A2)':
         await message.reply("Программа работы Listening(A2):", reply_markup=con.A2_ListeningFull)
     if message.text == 'Vocabulary(A2)':
-        await bot.send_document(message.chat.id, ('A1_all.pdf', A1))
+        doc = open('staticfiles/vocabulary/A2_Vocabulary.pdf', 'rb')
+        await bot.send_message(message.chat.id,"Отправляю документ, ожидайте⏳")
+        await bot.send_document(message.chat.id, ('A2_Vocabulary.pdf', doc))
+        doc.close()
     if message.text == 'Grammar(A1)':
         await message.reply("Программа работы Grammar(A1):", reply_markup=con.A1_GrammarFull)
     if message.text == 'Reading(A1)':
@@ -328,26 +344,10 @@ async def process_start_command(message: types.Message):
     if message.text == 'Listening(A1)':
         await message.reply("Программа работы Listening(A1):", reply_markup=con.A1_ListeningFull)
     if message.text == 'Vocabulary(A1)':
-        await bot.send_document(message.chat.id, ('A1_all.pdf', A1))
-    # if message.text == 'Grammar(B2)':
-    #     await message.reply("Программа работы Grammar(B2):", reply_markup=con.A2_GrammarFull)
-    # if message.text == 'Reading(B2)':
-    #     await message.reply("Программа работы Reading(B2):", reply_markup=con.A2_ReadingFull)
-    # if message.text == 'Listening(B2)':
-    #     await message.reply("Программа работы Listening(B2):", reply_markup=con.A2_ListeningFull)
-    # if message.text == 'Vocabulary(B2)':
-    #     await bot.send_document(message.chat.id, ('A1_all.pdf', A1))
-    # keyboard A1
-
-
-# ----------------------------------- main menu handler ----------------------------------------#
-
-# await bot.send_message(message.from_user.id, 'Платеж генерируется')
-# #     expired = datetime.now() + timedelta(minutes=10)
-# #     new_bill = await p2p.bill(amount=140, expiration=expired)
-# #     reply_keyboard = generate_payment_keyboard(new_bill.bill_id)
-# #     await bot.send_message(message.from_user.id, f'Ссылка для оплаты: \n {new_bill.pay_url}',
-# #                            reply_markup=reply_keyboard)
+        doc = open('staticfiles/vocabulary/A1_Vocabulary.pdf', 'rb')
+        await bot.send_message(message.chat.id,"Отправляю документ, ожидайте⏳")
+        await bot.send_document(message.chat.id, ('A1_Vocabulary.pdf', doc))
+        doc.close()
 
 
 
@@ -355,8 +355,8 @@ def generate_payment_keyboard(bill_id: int, subscription_id: int) -> InlineKeybo
     check_button = InlineKeyboardButton('Проверить оплату', callback_data=f'check_pay/{bill_id}/{subscription_id}')
     cancel_button = InlineKeyboardButton('Отменить оплату', callback_data=f'cancel_pay/{bill_id}')
     keyboard = InlineKeyboardMarkup(row_width=2).add(check_button, cancel_button)
-
     return keyboard
+
 
 async def generate_bill(amount: int) -> Bill:
     expired = datetime.now() + timedelta(minutes=10)
@@ -383,7 +383,7 @@ async def check_payment(callback_query: types.CallbackQuery):
     status = await p2p.check(bill_id=bill_id)
     status = status.status
     if status == 'PAID':
-        await bot.send_message(callback_query.from_user.id, 'oplaceno')
+        await bot.send_message(callback_query.from_user.id, 'Оплачено!')
         add_user_subscription(subscription_id, user_id=callback_query.from_user.id)
     else:
         await bot.send_message(callback_query.from_user.id, 'Не оплачено')
@@ -430,11 +430,63 @@ async def process_reading_command(callback_query: types.CallbackQuery):
     await bot.send_message(callback_query.from_user.id, topic_url)
 
 
-@dp.callback_query_handler(lambda c: c.data and c.data.startswith('Get'))
+
+
+
+# @dp.callback_query_handler(lambda c: c.data and c.data.startswith('Get'))
+# async def process_konspekt_command(callback_query: types.CallbackQuery):
+#     konspekt_id = str(callback_query.data)[4:]
+#     print(konspekt_id, type(konspekt_id))
+#     doc = open(fr'staticfiles/grammar/{konspekt_id}_Grammar_UA.pdf', 'rb')
+#     #doc = open(rf'staticfiles/grammar/{konspekt_id}_Grammar_UA' + '.pdf', 'rb')
+#     #doc = open('staticfiles/grammar/'+konspekt_id+'_Grammar_UA' + '.pdf', 'rb')
+#     path = 'staticfiles/grammar/А1_Grammar_UA.pdf'
+#     # "staticfiles / grammar / А1_Grammar_UA.pdf"
+#     await bot.send_document(callback_query.from_user.id, doc)
+#     doc.close()
+#     #await bot.send_document(callback_query.from_user.id, (f'{konspekt_id[0]}.pdf', ))
+#     await bot.send_document(callback_query.from_user.id, ('filename.pdf', path))
+
+
+@dp.callback_query_handler(lambda c: c.data)  # and c.data.startswith('Get') //skip
 async def process_konspekt_command(callback_query: types.CallbackQuery):
-    await bot.send_document(callback_query.from_user.id, ('A1_all.pdf', A1))
+    if str(callback_query.data)[4:] == 'A1':
+        doc_ua = open('staticfiles/grammar/А1_Grammar_UA.pdf', 'rb')
+        doc_ru = open('staticfiles/grammar/А1_Grammar_RU.pdf', 'rb')
+        await bot.send_document(callback_query.from_user.id, doc_ua)
+        await bot.send_document(callback_query.from_user.id, doc_ru)
+        await bot.send_message(callback_query.from_user.id,"Отправляю документы, ожидайте⏳")
+        doc_ua.close()
+        doc_ru.close()
+    elif str(callback_query.data)[4:] == 'A2':
+        doc_ua = open('staticfiles/grammar/А2_Grammar_UA.pdf', 'rb')
+        doc_ru = open('staticfiles/grammar/А2_Grammar_RU.pdf', 'rb')
+        await bot.send_message(callback_query.from_user.id,"Отправляю документы, ожидайте⏳")
+        await bot.send_document(callback_query.from_user.id, doc_ua)
+        await bot.send_document(callback_query.from_user.id, doc_ru)
+        doc_ua.close()
+        doc_ru.close()
+    elif str(callback_query.data)[4:] == 'B1':
+        doc_ua = open('staticfiles/grammar/В1_Grammar_UA.pdf', 'rb')
+        doc_ru = open('staticfiles/grammar/В1_Grammar_RU.pdf', 'rb')
+        await bot.send_message(callback_query.from_user.id,"Отправляю документы, ожидайте⏳")
+        await bot.send_document(callback_query.from_user.id, doc_ua)
+        await bot.send_document(callback_query.from_user.id, doc_ru)
+        doc_ua.close()
+        doc_ru.close()
+    elif str(callback_query.data)[4:] == 'B2':
+        doc_ru = open('staticfiles/grammar/B2_Grammar_Guide.pdf', 'rb')
+        await bot.send_message(callback_query.from_user.id,"Отправляю документы, ожидайте⏳")
+        await bot.send_document(callback_query.from_user.id, doc_ru)
+        doc_ru.close()
 
+    # else:
+    #     doc_instr = open(rf'staticfiles/Course' + '.pdf', 'rb')
+    #     await bot.send_document(callback_query.from_user.id, doc_instr)
+    #     doc_instr.close()
 
+    # await bot.send_document(callback_query.from_user.id, (f'{konspekt_id[0]}.pdf', ))
+    #await bot.send_document(callback_query.from_user.id, ('filename.txt', 'staticfiles\grammar\А1_Grammar_UA.pdf'))
 
 if __name__ == '__main__':
     executor.start_polling(dp)
